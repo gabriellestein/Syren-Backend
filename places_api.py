@@ -129,7 +129,8 @@ def near_search():
     # You may prefer to use the text_search API, instead.
     query_result = google_places.nearby_search(
         location= loc,
-        radius=20, 
+        # radius IN METERS SO CONVERT METERS TO MILES
+        radius=16093.4, 
         types=[types.TYPE_POLICE, types.TYPE_HOSPITAL, types.TYPE_CHURCH, types.TYPE_MOSQUE, types.TYPE_SYNAGOGUE]
         )
     # If types param contains only 1 item the request to Google Places API
@@ -148,7 +149,6 @@ def near_search():
         p.local_phone_number = place.local_phone_number
         p.url = place.url
         
-        print(p)
         loc_dict[p.place_id] = p
 
 
@@ -160,7 +160,6 @@ def write_to_file():
     
 def get_locations():
     near_search()
-    print(loc_dict)
-    return loc_dict
+    return json.dumps(loc_dict)
 
-get_locations()
+print(get_locations())
