@@ -102,45 +102,65 @@
 # except GooglePlacesError as error_detail:
 #     # You've passed in parameter values that the Places API doesn't like..
 #     print(error_detail)
-import xml.etree.ElementTree as ET
+#import xml.etree.ElementTree as ET
 from googleplaces import GooglePlaces, types, lang
+import json
 
-YOUR_API_KEY = 'AIzaSyC4ncrcthGOoVjm9iXhQyyQ_mWxcxQyQ74'
+YOUR_API_KEY = 'AIzaSyAkZUo_b8eMR301uy2fPBLN4_gDV-tzAQ4'
 
 google_places = GooglePlaces(YOUR_API_KEY)
+attributions = ""
+loc_dict = dict()
 
-town = 'Greenville'
-state = 'NC'
+class Place: 
+    def __init__(self):
+        self.name : str
+        self.geo_location : str
+        self.place_id: str
+        self.local_phone_number : str
+        self.url: str
 
-location = f"{town}, {state}"
+def near_search():
+    town = 'Greenville'
+    state = 'NC'
 
-# You may prefer to use the text_search API, instead.
-query_result = google_places.nearby_search(
-    location=location,
-    radius=200, types=[types.TYPE_FOOD])
-# If types param contains only 1 item the request to Google Places API
-# will be send as type param to fullfil:
-# http://googlegeodevelopers.blogspot.com.au/2016/02/changes-and-quality-improvements-in_16.html
+    loc = f"{town}, {state}"
 
-root = ET.Element("places")
+    # You may prefer to use the text_search API, instead.
+    query_result = google_places.nearby_search(
+        location= loc,
+        radius=20, 
+        types=[types.TYPE_POLICE, types.TYPE_HOSPITAL, types.TYPE_CHURCH, types.TYPE_MOSQUE, types.TYPE_SYNAGOGUE]
+        )
+    # If types param contains only 1 item the request to Google Places API
+    # will be send as type param to fullfil:
+    # http://googlegeodevelopers.blogspot.com.au/2016/02/changes-and-quality-improvements-in_16.html
+    print(query_result)
+    # if query_result.has_attributions:
+    #     attributions += query_result.html_attributions
+    print(1)
+    for place in query_result.places:
+        p = Place()
+        p.name = place.name
+        p.geo_location = str(place.geo_location)
+        p.place_id = place.place_id
+        place.get_details()
+        p.local_phone_number = place.local_phone_number
+        p.url = place.url
+        
+        print(p)
+        loc_dict[p.place_id] = p
 
-if query_result.has_attributions:
-    attributions = ET.SubElement(root, "attributions")
-    attributions.text = query_result.html_attributions
 
-for place in query_result.places:
-    place_elem = ET.SubElement(root, "place")
-    name = ET.SubElement(place_elem, "name")
-    name.text = place.name
-    geo_location = ET.SubElement(place_elem, "geo_location")
-    geo_location.text = str(place.geo_location)
-    place_id = ET.SubElement(place_elem, "place_id")
-    place_id.text = place.place_id
-    place.get_details()
-    local_phone_number = ET.SubElement(place_elem, "local_phone_number")
-    local_phone_number.text = place.local_phone_number
-    url = ET.SubElement(place_elem, "url")
-    url.text = place.url
+def write_to_file():
+    json_string=json.dumps(loc_dict)
+    file=open("places.json","w")
+    json.dump(json_string,file)
+    file.close()
+    
+def get_locations():
+    near_search()
+    print(loc_dict)
+    return loc_dict
 
-tree = ET.ElementTree(root)
-tree.write("foods.xml")
+get_locations()
