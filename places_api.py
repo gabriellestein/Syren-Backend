@@ -121,18 +121,13 @@ class Place:
         self.url: str
     
 
-def near_search():
-    town = 'Greenville'
-    state = 'NC'
-
-    loc = f"{town}, {state}"
-
-    # You may prefer to use the text_search API, instead.
+def near_search_police(loc):
+   # You may prefer to use the text_search API, instead.
     query_result = google_places.nearby_search(
         location= loc,
         # radius IN METERS SO CONVERT METERS TO MILES
         radius=40000, 
-        types=[types.TYPE_POLICE, types.TYPE_HOSPITAL, types.TYPE_CHURCH, types.TYPE_MOSQUE, types.TYPE_SYNAGOGUE]
+        types=types.TYPE_POLICE
         )
     # If types param contains only 1 item the request to Google Places API
     # will be send as type param to fullfil:
@@ -152,6 +147,126 @@ def near_search():
         
         loc_dict[p.place_id] = {"name": p.name, "geo_location": p.geo_location, "phone": p.local_phone_number, "url": p.url, "place_id": p.place_id}
 
+def near_search_hospital(loc):
+    town = 'Greenville'
+    state = 'NC'
+
+    loc = f"{town}, {state}"
+
+    # You may prefer to use the text_search API, instead.
+    query_result = google_places.nearby_search(
+        location= loc,
+        # radius IN METERS SO CONVERT METERS TO MILES
+        radius=40000, 
+        type=types.TYPE_HOSPITAL
+        )
+    # If types param contains only 1 item the request to Google Places API
+    # will be send as type param to fullfil:
+    # http://googlegeodevelopers.blogspot.com.au/2016/02/changes-and-quality-improvements-in_16.html
+    
+    # if query_result.has_attributions:
+    #     attributions += query_result.html_attributions
+    for place in query_result.places:
+        p = Place()
+        p.name = place.name
+        p.geo_location = str(place.geo_location)
+        p.place_id = place.place_id
+        
+        place.get_details()
+        p.local_phone_number = place.local_phone_number
+        p.url = place.url
+        
+        loc_dict[p.place_id] = {"name": p.name, "geo_location": p.geo_location, "phone": p.local_phone_number, "url": p.url, "place_id": p.place_id}
+
+def near_search_church(loc):
+    # You may prefer to use the text_search API, instead.
+    query_result = google_places.nearby_search(
+        location= loc,
+        # radius IN METERS SO CONVERT METERS TO MILES
+        radius=40000, 
+        type=types.TYPE_CHURCH
+        )
+    # If types param contains only 1 item the request to Google Places API
+    # will be send as type param to fullfil:
+    # http://googlegeodevelopers.blogspot.com.au/2016/02/changes-and-quality-improvements-in_16.html
+    
+    # if query_result.has_attributions:
+    #     attributions += query_result.html_attributions
+    for place in query_result.places:
+        p = Place()
+        p.name = place.name
+        p.geo_location = str(place.geo_location)
+        p.place_id = place.place_id
+        
+        place.get_details()
+        p.local_phone_number = place.local_phone_number
+        p.url = place.url
+        
+        loc_dict[p.place_id] = {"name": p.name, "geo_location": p.geo_location, "phone": p.local_phone_number, "url": p.url, "place_id": p.place_id}
+
+def near_search_mosque(loc):
+    # You may prefer to use the text_search API, instead.
+    query_result = google_places.nearby_search(
+        location= loc,
+        # radius IN METERS SO CONVERT METERS TO MILES
+        radius=40000, 
+        type=types.TYPE_MOSQUE
+        )
+    # If types param contains only 1 item the request to Google Places API
+    # will be send as type param to fullfil:
+    # http://googlegeodevelopers.blogspot.com.au/2016/02/changes-and-quality-improvements-in_16.html
+    
+    # if query_result.has_attributions:
+    #     attributions += query_result.html_attributions
+    for place in query_result.places:
+        p = Place()
+        p.name = place.name
+        p.geo_location = str(place.geo_location)
+        p.place_id = place.place_id
+        
+        place.get_details()
+        p.local_phone_number = place.local_phone_number
+        p.url = place.url
+        
+        loc_dict[p.place_id] = {"name": p.name, "geo_location": p.geo_location, "phone": p.local_phone_number, "url": p.url, "place_id": p.place_id}
+
+def near_search_synagogue(loc):
+    # You may prefer to use the text_search API, instead.
+    query_result = google_places.nearby_search(
+        location= loc,
+        # radius IN METERS SO CONVERT METERS TO MILES
+        radius=40000, 
+        type=types.TYPE_SYNAGOGUE
+        )
+    # If types param contains only 1 item the request to Google Places API
+    # will be send as type param to fullfil:
+    # http://googlegeodevelopers.blogspot.com.au/2016/02/changes-and-quality-improvements-in_16.html
+    
+    # if query_result.has_attributions:
+    #     attributions += query_result.html_attributions
+    for place in query_result.places:
+        p = Place()
+        p.name = place.name
+        p.geo_location = str(place.geo_location)
+        p.place_id = place.place_id
+        
+        place.get_details()
+        p.local_phone_number = place.local_phone_number
+        p.url = place.url
+        
+        loc_dict[p.place_id] = {"name": p.name, "geo_location": p.geo_location, "phone": p.local_phone_number, "url": p.url, "place_id": p.place_id}
+
+def near_search():
+    town = 'Greenville'
+    state = 'NC'
+
+    loc = f"{town}, {state}"
+    near_search_hospital(loc)
+    near_search_synagogue(loc)
+    near_search_church(loc)
+    near_search_synagogue(loc)
+    near_search_mosque(loc)
+    near_search_police(loc)
 
 def write_to_file():
     json_string=json.dumps(loc_dict)
