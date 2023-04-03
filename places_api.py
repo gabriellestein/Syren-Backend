@@ -110,7 +110,7 @@ YOUR_API_KEY = 'AIzaSyAkZUo_b8eMR301uy2fPBLN4_gDV-tzAQ4'
 
 google_places = GooglePlaces(YOUR_API_KEY)
 attributions = ""
-loc_dict = dict()
+loc_dict = {}
 
 class Place: 
     def __init__(self):
@@ -119,6 +119,7 @@ class Place:
         self.place_id: str
         self.local_phone_number : str
         self.url: str
+    
 
 def near_search():
     town = 'Greenville'
@@ -130,7 +131,7 @@ def near_search():
     query_result = google_places.nearby_search(
         location= loc,
         # radius IN METERS SO CONVERT METERS TO MILES
-        radius=16093.4, 
+        radius=40000, 
         types=[types.TYPE_POLICE, types.TYPE_HOSPITAL, types.TYPE_CHURCH, types.TYPE_MOSQUE, types.TYPE_SYNAGOGUE]
         )
     # If types param contains only 1 item the request to Google Places API
@@ -139,17 +140,17 @@ def near_search():
     print(query_result)
     # if query_result.has_attributions:
     #     attributions += query_result.html_attributions
-    print(1)
     for place in query_result.places:
         p = Place()
         p.name = place.name
         p.geo_location = str(place.geo_location)
         p.place_id = place.place_id
+        
         place.get_details()
         p.local_phone_number = place.local_phone_number
         p.url = place.url
         
-        loc_dict[p.place_id] = p
+        loc_dict[p.place_id] = [p.name, p.geo_location, p.local_phone_number, p.url, p.place_id]
 
 
 def write_to_file():
@@ -161,5 +162,3 @@ def write_to_file():
 def get_locations():
     near_search()
     return json.dumps(loc_dict)
-
-print(get_locations())
