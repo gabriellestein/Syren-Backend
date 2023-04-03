@@ -1,5 +1,6 @@
 Flask==2.2.2
 Flask_RESTful==0.3.9
 pandas==1.4.4
+protobuf==4.22.1
 python_google_places==1.4.2
-xmltodict==0.13.0
+google-cloud-storage==1.40.0
