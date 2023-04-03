@@ -41,9 +41,7 @@ def add_loc_to_dict(places):
         p.local_phone_number = place.local_phone_number
         p.url = place.url
         
-        print(place)
-        
-        loc_dict[p.place_id] = {"name": p.name, "geo_location": p.geo_location, "phone": p.local_phone_number, "url": p.url, "place_id": p.place_id}
+        loc_dict[p.place_id] = {'name': p.name, 'geo_location': p.geo_location, 'phone': p.local_phone_number, 'url': p.url, 'place_id': p.place_id}
 
 def near_search_all_locs():
     town = 'Greenville'
@@ -57,10 +55,15 @@ def near_search_all_locs():
     near_search(loc, types.TYPE_MOSQUE)
 
 def write_to_file():
+    # TESTING FUNCTION
+    near_search_all_locs()
     json_string=json.dumps(loc_dict)
     file=open("places.json","w")
+    file2=open("places2.json","w", encoding="utf-8")
     json.dump(json_string,file)
+    file2.write(str(loc_dict))
     file.close()
+    file2.close()
     
 def get_locations():
     near_search_all_locs()
