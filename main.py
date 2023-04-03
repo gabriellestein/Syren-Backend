@@ -3,20 +3,21 @@ from flask_restful import Resource, Api, reqparse
 import pandas as pd
 import os
 import places_api as places
+import gcp
 app = Flask(__name__)
-#api = Api(app)
+
 
 @app.route("/")
 def index():
-    return places.get_locations()
+    return gcp.get_json()
 
 @app.route("/schedule")
 def sheduled_location_update():
-    pass
+    return gcp.create_json(places.get_locations())
 
 @app.route("/manual")
 def manual_location_update():
-    pass
+     return gcp.create_json(places.get_locations())
 
     
 if __name__ == "__main__":
