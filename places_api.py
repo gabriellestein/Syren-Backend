@@ -137,7 +137,7 @@ def near_search():
     # If types param contains only 1 item the request to Google Places API
     # will be send as type param to fullfil:
     # http://googlegeodevelopers.blogspot.com.au/2016/02/changes-and-quality-improvements-in_16.html
-    print(query_result)
+    
     # if query_result.has_attributions:
     #     attributions += query_result.html_attributions
     for place in query_result.places:
