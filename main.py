@@ -9,7 +9,15 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     return places.get_locations()
-# AIzaSyAkZUo_b8eMR301uy2fPBLN4_gDV-tzAQ4
+
+@app.route("/schedule")
+def sheduled_location_update():
+    pass
+
+@app.route("/manual")
+def manual_location_update():
+    pass
+
     
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
