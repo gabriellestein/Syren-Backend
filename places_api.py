@@ -25,10 +25,9 @@ def near_search(loc, type):
         )
     add_loc_to_dict(query_result.places)
     
-    
     while query_result.has_next_page_token:
-        query_result_next_page = google_places.nearby_search(pagetoken=query_result.next_page_token)
-        add_loc_to_dict(query_result_next_page.places)
+        query_result = google_places.nearby_search(pagetoken=query_result.next_page_token)
+        add_loc_to_dict(query_result.places)
 
         
 def add_loc_to_dict(places):
@@ -41,6 +40,8 @@ def add_loc_to_dict(places):
         place.get_details()
         p.local_phone_number = place.local_phone_number
         p.url = place.url
+        
+        print(place)
         
         loc_dict[p.place_id] = {"name": p.name, "geo_location": p.geo_location, "phone": p.local_phone_number, "url": p.url, "place_id": p.place_id}
 
@@ -64,5 +65,3 @@ def write_to_file():
 def get_locations():
     near_search_all_locs()
     return json.dumps(loc_dict)
-
-print(get_locations())
