@@ -150,7 +150,7 @@ def near_search():
         p.local_phone_number = place.local_phone_number
         p.url = place.url
         
-        loc_dict[p.place_id] = [p.name, p.geo_location, p.local_phone_number, p.url, p.place_id]
+        loc_dict[p.place_id] = {"name": p.name, "geo_location": p.geo_location, "phone": p.local_phone_number, "url": p.url, "place_id": p.place_id}
 
 
 def write_to_file():
