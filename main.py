@@ -17,7 +17,7 @@ def sheduled_location_update():
 
 @app.route("/manual")
 def manual_location_update():
-     return gcp.create_json(places.get_locations())
+    return gcp.create_json(places.get_locations())
 
     
 if __name__ == "__main__":
