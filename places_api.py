@@ -29,6 +29,19 @@ def near_search(loc, type):
         query_result = google_places.nearby_search(lat_lng={'lat':0, 'lng':0},pagetoken=query_result.next_page_token)
         add_loc_to_dict(query_result.places)
 
+def near_KW_search(loc, keyword):
+    # We could also implement this with text search, but this yeilded better results for me
+    query_result = google_places.nearby_search(
+        location= loc,
+        # radius IN METERS SO CONVERT METERS TO MILES
+        radius=16093.4, 
+        keyword = keyword
+        )
+    add_loc_to_dict(query_result.places)
+    
+    while query_result.has_next_page_token:
+        query_result = google_places.nearby_search(lat_lng={'lat':0, 'lng':0},pagetoken=query_result.next_page_token)
+        add_loc_to_dict(query_result.places)
         
 def add_loc_to_dict(places):
     for place in places:
@@ -53,6 +66,7 @@ def near_search_all_locs():
     near_search(loc, types.TYPE_CHURCH)
     near_search(loc, types.TYPE_SYNAGOGUE)
     near_search(loc, types.TYPE_MOSQUE)
+    near_KW_search(loc, keyword='food bank')
 
 def write_to_file():
     # TESTING FUNCTION
