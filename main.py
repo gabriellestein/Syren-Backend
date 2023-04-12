@@ -1,19 +1,27 @@
 from flask import Flask
-from flask_restful import Resource, Api, reqparse
-import pandas as pd
 import os
+from flask_apscheduler import APScheduler
+from apscheduler.triggers.cron import CronTrigger
 import places_api as places
 import gcp
-app = Flask(__name__)
 
+class Config:
+    SCHEDULER_API_ENABLED = True
+    
+app = Flask(__name__)
+app.config.from_object(Config())
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
 
 @app.route("/")
 def index():
     return gcp.get_json()
 
-@app.route("/schedule")
+@scheduler.task(id="scheduled_update_json", trigger=CronTrigger.from_crontab("0 18 * * *"))
 def sheduled_location_update():
-    return gcp.create_json(places.get_locations())
+    print(gcp.create_json(places.get_locations()))
 
 @app.route("/manual")
 def manual_location_update():

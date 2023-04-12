@@ -1,4 +1,4 @@
-from googleplaces import GooglePlaces, types, lang
+from googleplaces import GooglePlaces, types
 import json
 
 YOUR_API_KEY = 'AIzaSyAkZUo_b8eMR301uy2fPBLN4_gDV-tzAQ4'
