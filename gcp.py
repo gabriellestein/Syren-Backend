@@ -35,4 +35,8 @@ def get_json(filename='locations.json'):
     blob = BUCKET.get_blob(filename)
     # load blob using json
     file_data = json.loads(blob.download_as_string())
-    return "Updated: {}".format(blob.updated) + '\n'+ file_data
+    return file_data
+    
+def last_update_datetime(filename='locations.json'):
+    blob = BUCKET.get_blob(filename)
+    return "Updated: {}".format(blob.updated)

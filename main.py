@@ -27,6 +27,10 @@ def sheduled_location_update():
 def manual_location_update():
     return gcp.create_json(places.get_locations())
 
+@app.route("/check_update")
+def get_update_datetime():
+    return gcp.last_update_datetime()
+
     
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
