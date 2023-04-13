@@ -21,11 +21,11 @@ def index():
 
 @scheduler.task(id="scheduled_update_json", trigger=CronTrigger.from_crontab("0 12 * * *"))
 def sheduled_location_update():
-    print(gcp.create_json('scheduled', places.get_locations()))
+    print(gcp.create_json(places.get_locations()))
 
 @app.route("/manual")
 def manual_location_update():
-    return gcp.create_json('maunal', places.get_locations())
+    return gcp.create_json(places.get_locations())
 
     
 if __name__ == "__main__":
