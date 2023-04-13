@@ -17,11 +17,11 @@ def create_json(type, json_object, filename='locations.json'):
     google cloud storage
     '''
     # create a blob
-    update = str(type, "update time:", datetime.now(), '\n')
+    update = "type: " + type+ "\n " + "update time: " + datetime.now() + '\n'
     blob = BUCKET.blob(filename)
     # upload the blob 
     blob.upload_from_string(
-        data=str(update, json.dumps(json_object)),
+        data= update + json.dumps(json_object),
         content_type='application/json'
         )
     result = filename + ' upload complete'
