@@ -1,5 +1,6 @@
 from googleplaces import GooglePlaces, types
 import json
+from datetime import datetime
 
 YOUR_API_KEY = 'AIzaSyAkZUo_b8eMR301uy2fPBLN4_gDV-tzAQ4'
 
@@ -76,4 +77,6 @@ def write_to_file():
     
 def get_locations():
     near_search_all_locs()
+    now = datetime.now()
+    loc_dict['Update Time'] = now
     return json.dumps(loc_dict)

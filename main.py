@@ -19,7 +19,7 @@ scheduler.start()
 def index():
     return gcp.get_json()
 
-@scheduler.task(id="scheduled_update_json", trigger=CronTrigger.from_crontab("0 18 * * *"))
+@scheduler.task(id="scheduled_update_json", trigger=CronTrigger.from_crontab("0 12 * * *"))
 def sheduled_location_update():
     print(gcp.create_json(places.get_locations()))
 
