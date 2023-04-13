@@ -2,10 +2,10 @@
 steps:
     # build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/syren', '.' ]
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/syren-back-end', '.' ]
     # push the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'gcr.io/$PROJECT_ID/syren']
+    args: [ 'push', 'gcr.io/$PROJECT_ID/syren-back-end']
     # deploy to Cloud Run
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ['run', 'deploy', 'erp-ui', '--image', 'gcr.io/$PROJECT_ID/syren', '--region', 'us-east1', '--platform', 'managed', '--allow-unauthenticated']
+    args: ['run', 'deploy', 'syren-back-end', '--image', 'gcr.io/$PROJECT_ID/syren-back-end', '--region', 'us-east1', '--platform', 'managed', '--allow-unauthenticated']
