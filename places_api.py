@@ -30,7 +30,7 @@ def near_search(loc, type="", keyword=""):
     add_loc_to_dict(query_result.places)
     
     while query_result.has_next_page_token:
-        query_result = google_places.nearby_search(lat_lng={'lat':0, 'lng':0},pagetoken=query_result.next_page_token)
+        query_result = google_places.nearby_search(lat_lng={'lat':0, 'lng':5},pagetoken=query_result.next_page_token)
         add_loc_to_dict(query_result.places)
         
 def add_loc_to_dict(places):
