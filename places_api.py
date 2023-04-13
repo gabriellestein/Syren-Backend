@@ -75,8 +75,8 @@ def write_to_file():
     file.close()
     file2.close()
     
-def get_locations():
+def get_locations(type):
     near_search_all_locs()
     now = datetime.now()
-    loc_dict['Update Time'] = now
+    loc_dict['Update Time'] = {'update time': now, 'type': type}
     return json.dumps(loc_dict)
