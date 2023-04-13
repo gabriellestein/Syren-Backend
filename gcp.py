@@ -1,6 +1,7 @@
 from google.cloud import storage
 import json
 from places_api import get_locations
+from datetime import datetime
 
 # credentials to get access google cloud storage
 # write your key path in place of gcloud_private_key.json
@@ -10,16 +11,17 @@ storage_client = storage.Client.from_service_account_json('syren-376523-67988eb2
 bucket_name = 'syren_location_data'
 BUCKET = storage_client.get_bucket(bucket_name)
 
-def create_json(json_object, filename='locations.json'):
+def create_json(type, json_object, filename='locations.json'):
     '''
     this function will create json object in
     google cloud storage
     '''
     # create a blob
+    update = str(type, "update time:", datetime.now(), '\n')
     blob = BUCKET.blob(filename)
     # upload the blob 
     blob.upload_from_string(
-        data=json.dumps(json_object),
+        data=str(update, json.dumps(json_object)),
         content_type='application/json'
         )
     result = filename + ' upload complete'
