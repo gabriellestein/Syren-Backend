@@ -1,11 +1,9 @@
-from googleplaces import GooglePlaces, types
+import googlemaps
 import json
-from datetime import datetime
 
 YOUR_API_KEY = 'AIzaSyAkZUo_b8eMR301uy2fPBLN4_gDV-tzAQ4'
 
-google_places = GooglePlaces(YOUR_API_KEY)
-attributions = ""
+gmaps = googlemaps.Client(key=YOUR_API_KEY)
 loc_dict = {}
 
 class Place: 
@@ -15,64 +13,60 @@ class Place:
         self.lat : str
         self.long : str
         self.place_id: str
-        self.local_phone_number : str
-        self.url: str
+        self.types: str
+        self.local_phone_number : str = ""
+        self.url: str = ""
        
-def near_search(loc, type="", keyword=""):
-    # You may prefer to use the text_search API, instead.
-    query_result = google_places.nearby_search(
-        location= loc,
-        # radius IN METERS SO CONVERT METERS TO MILES
-        radius=16093.4, 
-        type=type,
-        keyword=keyword
-        )
-    add_loc_to_dict(query_result.places)
+def near_search(loc, type=None, keyword=None):
+    query_result = gmaps.places_nearby(location = loc, radius = 16063, type = type, keyword = keyword)
+    add_loc_to_dict(query_result['results'])
+    while 'next_page_token' in query_result.keys():
+        query_result = gmaps.places_nearby(location = loc, radius = 16063, type = type, keyword = keyword, page_token=query_result['next_page_token'])
+        add_loc_to_dict(query_result['results'])
     
-    while query_result.has_next_page_token:
-        query_result = google_places.nearby_search(pagetoken=query_result.next_page_token)
-        add_loc_to_dict(query_result.places)
         
 def add_loc_to_dict(places):
     for place in places:
         p = Place()
-        p.name = place.name
-        p.geo_location = str(place.geo_location)
-        p.lat = str(place.geo_location['lat'])
-        p.long = str(place.geo_location['lng'])
-        p.place_id = place.place_id
-        place.get_details()
-        p.local_phone_number = place.local_phone_number
-        p.url = place.url
+        p.name = place['name']
+        p.geo_location = str(place['geometry']['location'])
+        p.lat = str(place['geometry']['location']['lat'])
+        p.long = str(place['geometry']['location']['lng'])
+        p.types = str(place['types'])
+        p.place_id = place['place_id']
+        details  = gmaps.place(place_id = p.place_id, fields=['formatted_phone_number', 'website'])['result']
+        if 'formatted_phone_number' in details.keys():
+            p.local_phone_number = details['formatted_phone_number']
+        if 'website' in details.keys():
+            p.url = details['website']
         
         loc_dict[p.place_id] = {'name': p.name, 
                                 'geo_location': p.geo_location, 
                                 'phone': p.local_phone_number, 'url': p.url,
                                 'place_id': p.place_id,
                                 'lat': p.lat,
-                                'long': p.long}
+                                'long': p.long,
+                                'types': p.types}
 
 def near_search_all_locs():
     town = 'Greenville'
     state = 'NC'
 
     loc = f"{town}, {state}"
-    near_search(loc, types.TYPE_HOSPITAL)
-    near_search(loc, types.TYPE_POLICE)
-    near_search(loc, types.TYPE_CHURCH)
-    near_search(loc, types.TYPE_SYNAGOGUE)
-    near_search(loc, types.TYPE_MOSQUE)
+    results = gmaps.geocode(loc)[0]
+    loc = results['geometry']['location']
+    near_search(loc, type='hospital')
+    near_search(loc, type='police')
+    near_search(loc, type='church')
+    near_search(loc, type='synagogue')
+    near_search(loc, type='mosque')
     near_search(loc, keyword='food bank')
 
 def write_to_file():
     # TESTING FUNCTION
-    near_search_all_locs()
-    json_string=json.dumps(loc_dict)
-    file=open("places.json","w")
-    file2=open("places2.json","w", encoding="utf-8")
-    json.dump(json_string,file)
-    file2.write(str(loc_dict))
-    file.close()
+    get_locations()
+    file2=open("places.json","w", encoding="utf-8")
+    file2.write(json.dumps(loc_dict))
     file2.close()
     
 def get_locations():

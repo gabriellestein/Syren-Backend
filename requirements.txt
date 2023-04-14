@@ -3,3 +3,4 @@ Flask==2.2.2
 Flask_APScheduler==1.12.4
 protobuf==4.22.3
 google-cloud-storage==2.8.0
+googlemaps==4.10.0
