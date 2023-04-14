@@ -1,5 +1,6 @@
 import googlemaps
 import json
+import time
 
 YOUR_API_KEY = 'AIzaSyAkZUo_b8eMR301uy2fPBLN4_gDV-tzAQ4'
 
@@ -21,6 +22,7 @@ def near_search(loc, type=None, keyword=None):
     query_result = gmaps.places_nearby(location = loc, radius = 16063, type = type, keyword = keyword)
     add_loc_to_dict(query_result['results'])
     while 'next_page_token' in query_result.keys():
+        time.sleep(10)
         query_result = gmaps.places_nearby(location = loc, radius = 16063, type = type, keyword = keyword, page_token=query_result['next_page_token'])
         add_loc_to_dict(query_result['results'])
     
@@ -56,10 +58,15 @@ def near_search_all_locs():
     results = gmaps.geocode(loc)[0]
     loc = results['geometry']['location']
     near_search(loc, type='hospital')
+    time.sleep(10)
     near_search(loc, type='police')
+    time.sleep(10)
     near_search(loc, type='church')
+    time.sleep(10)
     near_search(loc, type='synagogue')
+    time.sleep(10)
     near_search(loc, type='mosque')
+    time.sleep(10)
     near_search(loc, keyword='food bank')
 
 def write_to_file():
