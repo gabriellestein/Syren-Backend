@@ -21,6 +21,7 @@ class Place:
         self.wheelchair_accessible_entrance: str
         self.image_link: str
         self.rating: str
+        self.address: str
        
 def near_search(loc, type=None, keyword=None):
     query_result = gmaps.places_nearby(location = loc, radius = 16063, type = type, keyword = keyword)
@@ -40,17 +41,20 @@ def add_loc_to_dict(places):
         p.long = str(place['geometry']['location']['lng'])
         p.types = str(place['types'])
         p.place_id = place['place_id']
-        if 'editorial_summary' in place.keys():
-            p.description = place['editorial_summary']['overview']
-        details  = gmaps.place(place_id = p.place_id, fields=['formatted_phone_number', 'website', 'rating', 'wheelchair_accessible_entrance'])['result']
+        details  = gmaps.place(place_id = p.place_id, fields=['formatted_phone_number', 'website', 'rating', 'wheelchair_accessible_entrance', 'editorial_summary', 'formatted_address'])['result']
+        print(details)
         if 'formatted_phone_number' in details.keys():
             p.local_phone_number = details['formatted_phone_number']
+        if 'formatted_address' in details.keys():
+            p.address= details['formatted_address']
         if 'website' in details.keys():
             p.url = details['website']
         if 'rating' in details.keys():
             p.rating = str(details['rating'])
         if 'wheelchair_accessible_entrance' in details.keys():
-            p.wheelchair_accessible_entrance = details['wheelchair_accessible_entrance']
+            p.wheelchair_accessible_entrance = str(details['wheelchair_accessible_entrance'])
+        if 'editorial_summary' in details.keys():
+            p.description = place['editorial_summary']['overview']
         loc_dict[p.place_id] = p.__dict__
 
 def near_search_all_locs():
