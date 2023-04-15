@@ -86,5 +86,3 @@ def write_to_file():
 def get_locations():
     near_search_all_locs()
     return json.dumps(loc_dict)
-
-write_to_file()
