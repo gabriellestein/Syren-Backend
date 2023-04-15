@@ -15,8 +15,12 @@ class Place:
         self.long : str
         self.place_id: str
         self.types: str
-        self.local_phone_number : str = ""
-        self.url: str = ""
+        self.local_phone_number : str
+        self.url: str 
+        self.description: str
+        self.wheelchair_accessible_entrance: str
+        self.image_link: str
+        self.rating: str
        
 def near_search(loc, type=None, keyword=None):
     query_result = gmaps.places_nearby(location = loc, radius = 16063, type = type, keyword = keyword)
@@ -36,19 +40,18 @@ def add_loc_to_dict(places):
         p.long = str(place['geometry']['location']['lng'])
         p.types = str(place['types'])
         p.place_id = place['place_id']
-        details  = gmaps.place(place_id = p.place_id, fields=['formatted_phone_number', 'website'])['result']
+        if 'editorial_summary' in place.keys():
+            p.description = place['editorial_summary']['overview']
+        details  = gmaps.place(place_id = p.place_id, fields=['formatted_phone_number', 'website', 'rating', 'wheelchair_accessible_entrance'])['result']
         if 'formatted_phone_number' in details.keys():
             p.local_phone_number = details['formatted_phone_number']
         if 'website' in details.keys():
             p.url = details['website']
-        
-        loc_dict[p.place_id] = {'name': p.name, 
-                                'geo_location': p.geo_location, 
-                                'phone': p.local_phone_number, 'url': p.url,
-                                'place_id': p.place_id,
-                                'lat': p.lat,
-                                'long': p.long,
-                                'types': p.types}
+        if 'rating' in details.keys():
+            p.rating = str(details['rating'])
+        if 'wheelchair_accessible_entrance' in details.keys():
+            p.wheelchair_accessible_entrance = details['wheelchair_accessible_entrance']
+        loc_dict[p.place_id] = p.__dict__
 
 def near_search_all_locs():
     town = 'Greenville'
@@ -79,3 +82,5 @@ def write_to_file():
 def get_locations():
     near_search_all_locs()
     return json.dumps(loc_dict)
+
+write_to_file()
