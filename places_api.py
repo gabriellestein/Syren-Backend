@@ -79,7 +79,7 @@ def near_search_all_locs():
 def write_to_file():
     # TESTING FUNCTION
     get_locations()
-    file2=open("places.json","w", encoding="utf-8")
+    file2=open("testing/places.json","w", encoding="utf-8")
     file2.write(json.dumps(loc_dict))
     file2.close()
     

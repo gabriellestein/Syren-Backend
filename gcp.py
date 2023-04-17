@@ -4,7 +4,7 @@ from places_api import get_locations
 
 # credentials to get access google cloud storage
 # write your key path in place of gcloud_private_key.json
-storage_client = storage.Client.from_service_account_json('syren-376523-67988eb20f53.json')
+storage_client = storage.Client.from_service_account_json('gcp_json/syren-location-bucket.json')
 
 # write your bucket name in place of bucket1go
 bucket_name = 'syren_location_data'
